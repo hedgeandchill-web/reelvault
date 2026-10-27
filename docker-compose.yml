@@ -1,0 +1,8 @@
+services:
+  reelvault:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      APP_SECRET: "${APP_SECRET:?Set APP_SECRET in your .env file}"
+    restart: unless-stopped
