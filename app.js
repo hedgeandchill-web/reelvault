@@ -62,11 +62,10 @@
     return `${mins}:${String(secs).padStart(2, '0')}`;
   }
   async function requestJson(path, data) {
-    const response = await fetch(path, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    const options = data === undefined
+      ? { method: 'GET', cache: 'no-store' }
+      : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) };
+    const response = await fetch(path, options);
     let payload;
     try { payload = await response.json(); }
     catch { throw new Error('The server did not respond as expected. Please retry.'); }
@@ -125,9 +124,24 @@
     hideFeedback();
     setPreparing(true);
     try {
-      const { download_url } = await requestJson('/api/prepare', { token: currentToken });
+      const started = await requestJson('/api/prepare', { token: currentToken });
+      if (!/^\/api\/jobs\/[0-9a-f]{32}$/.test(started.status_url || '')) {
+        throw new Error('The download could not be queued. Please retry.');
+      }
+      let download_url = null;
+      const deadline = Date.now() + 10 * 60 * 1000;
+      while (Date.now() < deadline) {
+        await new Promise(resolve => setTimeout(resolve, 1800));
+        const job = await requestJson(started.status_url);
+        if (job.status === 'error') throw new Error(job.detail || 'Video processing failed.');
+        if (job.status === 'done') {
+          download_url = job.download_url;
+          break;
+        }
+        saveLoading.lastChild.textContent = job.status === 'queued' ? ' In queue…' : ' Processing video…';
+      }
       if (!download_url || !/^\/api\/file\/[0-9a-f]{32}$/.test(download_url)) {
-        throw new Error('Could not prepare the download. Please try again.');
+        throw new Error('The video is taking too long. Please retry shortly.');
       }
       const link = document.createElement('a');
       link.href = download_url;

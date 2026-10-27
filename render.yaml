@@ -7,3 +7,7 @@ services:
     envVars:
       - key: APP_SECRET
         generateValue: true
+      - key: PARALLEL_DOWNLOADS
+        value: 1
+      - key: QUEUE_CAPACITY
+        value: 8

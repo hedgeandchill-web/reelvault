@@ -1,0 +1,9 @@
+ReelVault v2 (2026-10-27)
+- Queued video download API (202 + job status polling)
+- Bound download processing (default 1), queue size (8), metadata inspections (4)
+- 100 MB default per-video cap; max 500 MB in ready files
+- Background cleanups, request rate limits, finite timeout and subprocess cleanup
+- Rejects audio-only video formats
+- Browser shows queued/processing status
+- Local API + media tests passed; homepage/health requests passed local load test
+NOT verified: real Instagram downloading, Render production capacity, or ad approval.

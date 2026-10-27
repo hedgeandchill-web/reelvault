@@ -1,0 +1,24 @@
+ReelVault v2 — upgrade for existing GitHub repository
+Repository: https://github.com/hedgeandchill-web/reelvault
+
+1) Unzip this package.
+2) Upload or replace these five files in your EXISTING GitHub repository ROOT:
+     app.py
+     worker_download.py   (new)
+     app.js
+     Dockerfile
+     render.yaml          (optional if you deployed by Web Service)
+3) Commit changes to main.
+4) Check Render > Deploys and Logs for a successful build.
+5) Test https://reelvault-kzrc.onrender.com/api/health and one authorized video.
+
+IMPORTANT: This deployment package is intentionally FLAT because your GitHub
+repository currently stores the website HTML/CSS/JS in the root. DO NOT move
+those older files or upload an extra enclosing folder.
+
+The existing URL, styling and main page remain unchanged; app.js, app.py and
+the Dockerfile are updated to implement the queue.
+
+Render Free is not suitable for heavy production video traffic. For higher
+capacity, move to a more capable paid server. Keep Uvicorn workers = 1 until
+you add a shared queue and shared storage.
