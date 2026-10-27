@@ -7,10 +7,12 @@ from __future__ import annotations
 
 import asyncio
 import collections
+import json
 import os
 import re
 import secrets
 import shutil
+import subprocess
 import tempfile
 import time
 from dataclasses import dataclass
@@ -154,7 +156,7 @@ def video_available(info: dict) -> bool:
     if any(f.get('vcodec') not in (None, 'none') for f in formats):
         return True
     # Some extractors expose format URLs without codec metadata.
-    if info.get('ext') in {'mp4', 'mov', 'm4v', 'webm'}:
+    if info.get('vcodec') is None and info.get('ext') in {'mp4', 'mov', 'm4v', 'webm'}:
         return True
     return False
 
@@ -195,17 +197,81 @@ def _inspect(url: str) -> dict:
             'uploader': str(info.get('uploader') or '')[:65]}
 
 
+# Prefer ordinary MP4/H.264 video with sound so the file plays on phones.
+# Every fallback explicitly contains a video stream (no audio-only fallback).
+VIDEO_FORMAT = (
+    'b[ext=mp4][vcodec^=avc1]/'
+    'bv[vcodec^=avc1]+ba[ext=m4a]/'
+    'bv*[vcodec^=avc1]+ba/'
+    'b[ext=mp4]/'
+    'bv[ext=mp4]+ba[ext=m4a]/'
+    'bv*+ba/bv*'
+)
+
+
+def probe_media(path: Path) -> tuple[str, str | None]:
+    """Identify actual video/audio tracks; extension alone isn't evidence of video."""
+    result = subprocess.run(
+        ['ffprobe', '-v', 'error', '-show_streams', '-of', 'json', str(path)],
+        capture_output=True, text=True, timeout=25, check=False,
+    )
+    if result.returncode != 0:
+        raise ValueError('The downloaded media could not be read as a video.')
+    try:
+        streams = json.loads(result.stdout)['streams']
+    except (KeyError, ValueError, TypeError) as exc:
+        raise ValueError('The downloaded media has no readable video tracks.') from exc
+    video_tracks = [
+        st for st in streams
+        if st.get('codec_type') == 'video'
+        and not st.get('disposition', {}).get('attached_pic')
+        and st.get('width', 0) > 0 and st.get('height', 0) > 0
+    ]
+    if not video_tracks:
+        raise ValueError('Instagram returned audio without video. Try another public Reel.')
+    audio_tracks = [st for st in streams if st.get('codec_type') == 'audio']
+    return video_tracks[0].get('codec_name', ''), (audio_tracks[0].get('codec_name', '') if audio_tracks else None)
+
+
+def ensure_playable_mp4(path: Path) -> Path:
+    """Ensure H.264 video and AAC audio, transcode only when necessary."""
+    vcodec, acodec = probe_media(path)
+    if path.suffix.lower() == '.mp4' and vcodec == 'h264' and acodec in (None, 'aac'):
+        return path
+    target = path.parent / 'reelvault-playable.mp4'
+    args = [
+        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-y',
+        '-i', str(path), '-map', '0:v:0', '-map', '0:a:0?',
+        '-c:v', 'copy' if vcodec == 'h264' else 'libx264',
+    ]
+    if vcodec != 'h264':
+        args += ['-preset', 'ultrafast', '-crf', '24', '-pix_fmt', 'yuv420p', '-threads', '1']
+    args += [
+        '-c:a', 'copy' if acodec in (None, 'aac') else 'aac',
+        '-movflags', '+faststart', str(target),
+    ]
+    result = subprocess.run(args, capture_output=True, text=True, timeout=130, check=False)
+    if result.returncode != 0 or not target.is_file():
+        raise ValueError('Could not convert this video to a playable MP4.')
+    probe_media(target)
+    if target.stat().st_size > MAX_VIDEO_BYTES:
+        raise ValueError('This video is too large (250 MB maximum).')
+    # Save disk space on small free hosting instances.
+    path.unlink(missing_ok=True)
+    return target
+
+
 def _download(url: str, folder: Path) -> Path:
     import yt_dlp
 
     opts = ydl_options(
         outtmpl=str(folder / 'rv-%(id)s.%(ext)s'),
-        format='bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/best',
+        format=VIDEO_FORMAT,
         merge_output_format='mp4',
         max_filesize=MAX_VIDEO_BYTES,
         skip_download=False,
         restrictfilenames=True,
-        # Reject a photo-only post, rather than returning the wrong file type.
+        # Reject photo-only posts; downloaded content is independently checked with ffprobe.
         match_filter=lambda info, incomplete: (
             None if incomplete or video_available(info)
             else 'No video in this post'
@@ -215,13 +281,26 @@ def _download(url: str, folder: Path) -> Path:
         status = ydl.download([url])
     if status != 0:
         raise ValueError('Instagram could not provide this video.')
-    files = [p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in {'.mp4', '.webm', '.mov', '.mkv'}]
+    files = [
+        p for p in folder.iterdir()
+        if p.is_file() and p.suffix.lower() in {'.mp4', '.webm', '.mov', '.mkv'}
+    ]
     if not files:
         raise ValueError('No downloadable video was found at that link.')
-    path = max(files, key=lambda p: p.stat().st_size)
+    # Never pick an audio-only MP4 just because it is the largest file.
+    video_files = []
+    for candidate in files:
+        try:
+            probe_media(candidate)
+        except ValueError:
+            continue
+        video_files.append(candidate)
+    if not video_files:
+        raise ValueError('Instagram returned audio without video. Try another public Reel.')
+    path = max(video_files, key=lambda p: p.stat().st_size)
     if path.stat().st_size > MAX_VIDEO_BYTES:
         raise ValueError('This video is too large (250 MB maximum).')
-    return path
+    return ensure_playable_mp4(path)
 
 
 @app.middleware('http')
