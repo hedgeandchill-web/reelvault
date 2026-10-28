@@ -1,151 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#faf9fd">
-  <meta name="description" content="Save publicly accessible Instagram Reels and videos online. Paste a link, preview your video, and download in the best quality available. No login required.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="ReelVault — Instagram Video Downloader">
-  <meta property="og:description" content="Your favorite Instagram videos, saved for later. Just paste a link.">
-  <title>Instagram Video Downloader — Download Reels & Videos | ReelVault</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"ReelVault Instagram Video Downloader","applicationCategory":"MultimediaApplication","operatingSystem":"Any modern browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Save publicly accessible Instagram Reels and video posts with permission."}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07121e">
+  <meta name="description" content="Check whether a video shows signs of AI generation. Analyze TikTok, Instagram, Facebook videos or upload your own footage. Evidence-first reports, not guesses.">
+  <title>AI Checker — Know what you're watching.</title>
+  <link rel="icon" type="image/svg+xml" href="/checker-favicon.svg">
+  <link rel="stylesheet" href="/checker.css">
+  <script defer src="/checker.js"></script>
 </head>
 <body>
-  <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <symbol id="ico-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 17.5v2A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-2"/></symbol>
-    <symbol id="ico-link" viewBox="0 0 24 24"><path d="M10 13.7a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 1 0-7.07-7.07L10.9 5.73M14 10.3a5 5 0 0 0-7.07 0l-2.12 2.12a5 5 0 0 0 7.07 7.07l1.25-1.25"/></symbol>
-    <symbol id="ico-clipboard" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1M9 11h6m-6 4h5"/></symbol>
-    <symbol id="ico-reel" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m9 7 6 5-6 5z"/></symbol>
-    <symbol id="ico-play" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m10 8 6 4-6 4z"/></symbol>
-    <symbol id="ico-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
-    <symbol id="ico-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
-    <symbol id="ico-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
-    <symbol id="ico-sparkle" viewBox="0 0 24 24"><path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2L12 2Z"/></symbol>
-    <symbol id="ico-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></symbol>
-    <symbol id="ico-zap" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-12h-7l0-8Z"/></symbol>
-    <symbol id="ico-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18.5h4"/></symbol>
-    <symbol id="ico-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
-    <symbol id="ico-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="15" rx="2"/><path d="M8 22h8m-4-4v4"/></symbol>
-    <symbol id="ico-external" viewBox="0 0 24 24"><path d="M13 5h6v6m0-6-9 9"/><path d="M19 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/></symbol>
-    <symbol id="ico-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
-    <symbol id="ico-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></symbol>
-    <symbol id="ico-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
-    <symbol id="ico-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
-  </svg>
-
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="/" aria-label="ReelVault homepage"><span class="brand-symbol"><svg aria-hidden="true"><use href="#ico-download"/></svg></span><span>reel<span class="brand-light">vault</span><span class="brand-period">.</span></span></a>
-      <nav class="main-nav" aria-label="Main navigation">
-        <a href="#downloader">Downloader</a>
-        <a href="#how-it-works">How it works</a>
-        <a href="#faq">FAQs</a>
-      </nav>
-      <a class="header-pill" href="#downloader"><span class="status-dot"></span> Free online tool <svg class="small-arrow" aria-hidden="true"><use href="#ico-arrow"/></svg></a>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero" id="downloader" aria-labelledby="hero-title">
-      <div class="hero-glow glow-left" aria-hidden="true"></div><div class="hero-glow glow-right" aria-hidden="true"></div>
-      <div class="container hero-content">
-        <div class="eyebrow"><svg aria-hidden="true"><use href="#ico-sparkle"/></svg> YOUR CONTENT, YOUR COLLECTION</div>
-        <h1 id="hero-title">Save Instagram videos <span class="gradient-text">you love.</span></h1>
-        <p class="hero-description">That Reel you can't stop watching? Keep it. Paste any publicly accessible Instagram video link and save it to your device, effortlessly.</p>
-
-        <div class="downloader-card">
-          <div class="tool-tabs" role="group" aria-label="Choose Instagram content type">
-            <button type="button" class="tool-tab active" data-tab="video" aria-pressed="true"><svg aria-hidden="true"><use href="#ico-play"/></svg> Video</button>
-            <button type="button" class="tool-tab" data-tab="reels" aria-pressed="false"><svg aria-hidden="true"><use href="#ico-reel"/></svg> Reels</button>
-            <button type="button" class="tool-tab" data-tab="posts" aria-pressed="false"><svg aria-hidden="true"><use href="#ico-grid"/></svg> Video posts</button>
+  <div class="site-shell">
+    <header class="topbar container">
+      <a href="/" class="brand" aria-label="AI Checker homepage"><span class="brand-symbol"><span></span></span><span>AI Checker<span class="brand-dot">.</span></span></a>
+      <nav class="main-nav" aria-label="Main navigation"><a href="/" aria-current="page">AI Checker</a><a href="/download/">Video Downloader</a><a href="#how">How it works</a><a href="#faq">FAQs</a></nav>
+      <a class="nav-cta" href="#checker">Check a video <span aria-hidden="true">↗</span></a>
+    </header>
+    <main>
+      <div class="ambient ambient-left"></div><div class="ambient ambient-right"></div>
+      <section class="hero container" id="checker">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-pulse"></span> VIDEO AUTHENTICITY, REIMAGINED</div>
+          <h1>See beyond<br>the <span class="gradient-text">pixels.</span></h1>
+          <p class="intro">Is that viral video real, or made with AI? Drop a link or upload a clip to get an evidence-based read on what you're seeing.</p>
+          <div class="platforms"><span>CHECK VIDEOS FROM</span><div class="platform"><span class="platform-icon">♪</span> TikTok</div><div class="platform"><span class="platform-icon">◎</span> Instagram</div><div class="platform"><span class="platform-icon">f</span> Facebook</div></div>
+          <div class="trust-note"><span class="trust-icon">✦</span><span>Built for curiosity. Designed for clarity. Never a definitive verdict.</span></div>
+        </div>
+        <div class="tool-card" id="tool">
+          <div class="tool-head"><div class="tool-heading"><span class="online-dot"></span> AI VIDEO CHECKER</div><div class="tool-head-right"><span class="free-pill">FREE TO USE</span></div></div>
+          <div class="tool-content">
+            <h2>Let's take a closer look.</h2><p class="tool-sub">Check a social video or upload a file from your device.</p>
+            <div class="tabs" role="tablist" aria-label="Choose video input">
+              <button class="tab active" id="tab-link" role="tab" aria-selected="true" aria-controls="link-panel">↗ <span>Paste a link</span></button>
+              <button class="tab" id="tab-upload" role="tab" aria-selected="false" aria-controls="upload-panel">⇧ <span>Upload video</span></button>
+            </div>
+            <div id="link-panel" role="tabpanel" aria-labelledby="tab-link">
+              <label for="url">Video URL</label>
+              <div class="link-input"><span class="input-icon">⌁</span><input id="url" type="url" autocomplete="url" spellcheck="false" placeholder="Paste TikTok, Instagram or Facebook link..."></div>
+              <p class="input-hint">Public posts only. Some social links may be restricted.</p>
+              <button type="button" class="primary-button" id="analyze-link"><span class="button-shine"></span>Analyze video <span class="button-arrow">↗</span></button>
+            </div>
+            <div id="upload-panel" role="tabpanel" aria-labelledby="tab-upload" hidden>
+              <label for="file-input">Video file</label>
+              <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose a video file"><div class="drop-icon">↑</div><strong id="file-label">Drag & drop your video here</strong><span>or <span class="browse">browse your files</span></span><small>MP4, MOV, WebM, MKV · Up to 30 MB · 10 min</small></div>
+              <input type="file" id="file-input" accept="video/mp4,video/quicktime,video/webm,video/x-matroska,video/*" hidden>
+              <button type="button" class="primary-button" id="analyze-file">Analyze uploaded video <span class="button-arrow">↗</span></button>
+            </div>
+            <div class="status" id="status" aria-live="polite" hidden><div class="spinner"></div><div><strong id="status-title">Preparing analysis...</strong><p id="status-sub">This can take a moment for larger videos.</p></div></div>
+            <div class="error-msg" id="error" role="alert" hidden></div>
           </div>
-          <form id="downloader-form" novalidate>
-            <label for="instagram-url" class="input-label">Instagram video link</label>
-            <div class="url-field-wrap">
-              <svg class="field-link-icon" aria-hidden="true"><use href="#ico-link"/></svg>
-              <input id="instagram-url" name="url" type="url" inputmode="url" spellcheck="false" autocomplete="off" aria-describedby="input-help" placeholder="https://www.instagram.com/reel/…" required>
-              <button type="button" class="paste-button" id="paste-btn"><svg aria-hidden="true"><use href="#ico-clipboard"/></svg> Paste</button>
-            </div>
-            <div class="form-actions">
-              <span class="input-hint" id="input-help"><svg aria-hidden="true"><use href="#ico-info"/></svg> Public videos & Reels only</span>
-              <button class="primary-button" type="submit" id="get-video-btn"><span class="button-content"><svg aria-hidden="true"><use href="#ico-download"/></svg> Get video <svg class="button-arrow" aria-hidden="true"><use href="#ico-arrow"/></svg></span><span class="loading-content" hidden><span class="spinner"></span> Finding video…</span></button>
-            </div>
-          </form>
-
-          <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
-          <div class="preview-card" id="preview-card" hidden>
-            <div class="preview-eyebrow"><span class="preview-success"><svg aria-hidden="true"><use href="#ico-check"/></svg></span> Your video is ready <span class="preview-tag" id="preview-tag">REEL</span></div>
-            <div class="preview-body">
-              <div class="preview-thumbnail" id="preview-thumbnail"><svg aria-hidden="true"><use href="#ico-play"/></svg></div>
-              <div class="preview-details">
-                <div class="preview-mini">INSTAGRAM VIDEO</div>
-                <h3 id="preview-title">Instagram video</h3>
-                <p id="preview-meta">MP4 · Best available quality</p>
-                <button class="secondary-download" id="save-video-btn" type="button"><span class="save-label"><svg aria-hidden="true"><use href="#ico-download"/></svg> Download video</span><span class="save-loading" hidden><span class="spinner"></span> Preparing download…</span></button>
-              </div>
-            </div>
+          <div class="tool-foot"><span>◇ &nbsp; Your upload is deleted after processing</span><span id="mode-label">Checking availability…</span></div>
+        </div>
+      </section>
+      <section class="report-section container" id="report-section" hidden aria-live="polite">
+        <div class="section-kicker"><span class="mini-line"></span> YOUR ANALYSIS</div>
+        <div class="report-layout">
+          <div class="report-main">
+            <div class="report-header"><div class="report-orb" id="report-orb">?</div><div><div class="report-category" id="report-category">Evidence-based assessment</div><h2 id="verdict">Your report</h2><p id="report-description"></p></div></div>
+            <div class="score-panel" id="score-panel" hidden><div class="score-top"><span>MEAN FRAME-LEVEL AI SIGNAL</span><strong id="score-value">—</strong></div><div class="score-track"><div id="score-fill"></div></div><p>This reflects a detector's signal across sampled frames, <strong>not</strong> the probability that a claim is true.</p></div>
+            <div class="report-info"><div class="report-info-title">FRAME-BY-FRAME ANALYSIS <span id="frame-count"></span></div><div id="frame-chart" class="frame-chart"></div><p id="sample-note" class="analysis-footnote"></p></div>
           </div>
-          <p class="tool-footer"><svg aria-hidden="true"><use href="#ico-shield"/></svg> No sign-up. No passwords. Just your link.</p>
+          <div class="report-aside"><div class="aside-head">THE EVIDENCE</div><div class="evidence-item"><span class="evidence-icon">◷</span><div><strong>Video details</strong><p id="video-facts">—</p></div></div><div class="evidence-item"><span class="evidence-icon">◇</span><div><strong>Content Credentials (C2PA)</strong><p id="provenance-text">—</p></div></div><div class="evidence-item"><span class="evidence-icon">✳</span><div><strong>Metadata clues</strong><p id="metadata-text">—</p></div></div><div class="aside-disclaimer">AI detectors can miss generated content or flag genuine footage. Treat this as supporting evidence, not a fact-check or proof of authenticity.</div><button class="again-btn" id="again">Analyze another video ↗</button></div>
         </div>
-
-        <div class="hero-trust" aria-label="Features"><span><svg aria-hidden="true"><use href="#ico-check"/></svg> No Instagram login</span><i></i><span><svg aria-hidden="true"><use href="#ico-check"/></svg> Best available quality</span><i></i><span><svg aria-hidden="true"><use href="#ico-check"/></svg> Works on any device</span></div>
-      </div>
-    </section>
-
-    <section class="steps-section" id="how-it-works" aria-labelledby="steps-title">
-      <div class="container">
-        <div class="section-title centered"><span class="section-kicker">THE 3-STEP METHOD</span><h2 id="steps-title">As easy as <em>copy, paste, save.</em></h2><p>Zero complicated steps. Here's how to get from your favorite Reel to your camera roll.</p></div>
-        <div class="step-grid">
-          <article class="step-card"><div class="step-head"><span class="step-number">01</span><span class="step-icon purple-icon"><svg aria-hidden="true"><use href="#ico-link"/></svg></span></div><h3>Copy the link</h3><p>Open Instagram, find the video you love, tap Share, and choose <strong>Copy link.</strong></p><div class="step-illustration link-illustration" aria-hidden="true"><span class="mock-browser-line"></span><span class="mock-url"><svg><use href="#ico-link"/></svg> instagram.com/reel/...</span><span class="mock-cursor"><svg><use href="#ico-clipboard"/></svg></span></div></article>
-          <article class="step-card"><div class="step-head"><span class="step-number">02</span><span class="step-icon pink-icon"><svg aria-hidden="true"><use href="#ico-clipboard"/></svg></span></div><h3>Paste it here</h3><p>Come back to ReelVault, paste the link into the box above, and tap <strong>Get video.</strong></p><div class="step-illustration paste-illustration" aria-hidden="true"><span class="fake-paste-input"><svg><use href="#ico-link"/></svg> Paste your Instagram link <span>Paste</span></span><span class="tiny-spark tiny-spark-1">✦</span><span class="tiny-spark tiny-spark-2">✦</span></div></article>
-          <article class="step-card"><div class="step-head"><span class="step-number">03</span><span class="step-icon orange-icon"><svg aria-hidden="true"><use href="#ico-download"/></svg></span></div><h3>Download & enjoy</h3><p>Preview the video and download it in the <strong>best quality available</strong> to your device.</p><div class="step-illustration save-illustration" aria-hidden="true"><span class="save-file"><svg><use href="#ico-play"/></svg><span><b>your-favorite-reel.mp4</b><small>Saved to Downloads</small></span><span class="file-check"><svg><use href="#ico-check"/></svg></span></span></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="feature-section" id="features" aria-labelledby="feature-title">
-      <div class="container feature-shell">
-        <div class="feature-copy"><span class="section-kicker light-kicker">SMALL TOOL. BIG CONVENIENCE.</span><h2 id="feature-title">Keep the moments that <em>matter to you.</em></h2><p>Recipes you'll actually try. Travel spots you're dreaming of. A workout you want to revisit. Your favorite videos deserve more than a forgotten bookmark.</p>
-          <ul class="feature-list">
-            <li><span><svg aria-hidden="true"><use href="#ico-zap"/></svg></span><div><strong>Simple, seamless downloading</strong><small>From Instagram link to saved video in a few taps.</small></div></li>
-            <li><span><svg aria-hidden="true"><use href="#ico-eye"/></svg></span><div><strong>Preview before you save</strong><small>Make sure it's the right video first.</small></div></li>
-            <li><span><svg aria-hidden="true"><use href="#ico-phone"/></svg></span><div><strong>Made for every screen</strong><small>From your phone to your laptop, it just fits.</small></div></li>
-          </ul>
-        </div>
-        <div class="feature-art" aria-hidden="true">
-          <div class="art-orb orb-a"></div><div class="art-orb orb-b"></div>
-          <div class="floating-note note-left"><span class="note-icon"><svg><use href="#ico-heart"/></svg></span> Save your favorites</div>
-          <div class="phone-device"><div class="phone-notch"></div><div class="phone-screen"><div class="screen-top"><span>reels</span><span>•••</span></div><div class="screen-art"><div class="sun-disk"></div><div class="rolling-hill hill-back"></div><div class="rolling-hill hill-front"></div><div class="screen-play"><svg><use href="#ico-play"/></svg></div></div><div class="screen-actions"><span>♥</span><span>↗</span><span>⌑</span></div><div class="screen-caption"><div></div><div></div><div></div></div></div></div>
-          <div class="floating-note note-right"><span class="note-check"><svg><use href="#ico-check"/></svg></span><span><b>Video saved!</b><small>Ready to rewatch</small></span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="benefits-section" aria-labelledby="benefits-title"><div class="container"><div class="section-title centered"><span class="section-kicker">WHY REELVAULT?</span><h2 id="benefits-title">Everything you need. <em>Nothing you don't.</em></h2></div><div class="benefit-grid">
-      <article class="benefit"><div class="benefit-icon"><svg aria-hidden="true"><use href="#ico-sparkle"/></svg></div><h3>Best available quality</h3><p>We fetch the best playable version that Instagram makes available for public videos.</p></article>
-      <article class="benefit"><div class="benefit-icon"><svg aria-hidden="true"><use href="#ico-shield"/></svg></div><h3>No account needed</h3><p>No registrations, no logins, and definitely no Instagram passwords.</p></article>
-      <article class="benefit"><div class="benefit-icon"><svg aria-hidden="true"><use href="#ico-monitor"/></svg></div><h3>Save on any device</h3><p>Use ReelVault in your browser on iPhone, Android, Mac, or PC.</p></article>
-      <article class="benefit"><div class="benefit-icon"><svg aria-hidden="true"><use href="#ico-clock"/></svg></div><h3>Temporary by design</h3><p>Prepared files are temporary, with no accounts or permanent personal library.</p></article>
-    </div></div></section>
-
-    <section class="faq-section" id="faq" aria-labelledby="faq-title"><div class="container faq-layout"><div class="faq-intro"><span class="section-kicker">GOOD TO KNOW</span><h2 id="faq-title">A few <em>quick answers.</em></h2><p>Everything you might be wondering about saving Instagram videos with ReelVault.</p><a href="#downloader" class="text-link">Back to downloader <svg aria-hidden="true"><use href="#ico-arrow"/></svg></a></div>
-      <div class="faq-list">
-        <details open><summary>Is ReelVault free to use?<span class="faq-plus"></span></summary><p>Yes, ReelVault is free to use. Paste a public Instagram video link to preview and download when the video is accessible.</p></details>
-        <details><summary>Do I need to log in to Instagram?<span class="faq-plus"></span></summary><p>No. ReelVault never asks for your Instagram username or password. It only supports directly accessible public Reels and video posts.</p></details>
-        <details><summary>Can I download private Instagram videos?<span class="faq-plus"></span></summary><p>No. Private, deleted, restricted, or login-required content isn't supported. Instagram can also block access to some public content.</p></details>
-        <details><summary>Will my video be high quality?<span class="faq-plus"></span></summary><p>We attempt the best available MP4 video stream. Actual quality depends on what Instagram makes publicly accessible, and some videos may be unavailable.</p></details>
-        <details><summary>Where does my downloaded video go?<span class="faq-plus"></span></summary><p>Usually your device's Downloads folder. On iPhone, check Safari Downloads or the Files app. You can then save the clip to Photos if you want.</p></details>
-        <details><summary>Can I repost the videos I save?<span class="faq-plus"></span></summary><p>Only download and use content you own or have permission to save. Reposting or commercial reuse may require permission from the copyright holder.</p></details>
-      </div>
-    </div></section>
-
-    <section class="closing-section"><div class="container closing-card"><div class="closing-decoration" aria-hidden="true"><span></span><span></span><span></span></div><div class="closing-content"><div class="eyebrow closing-eyebrow"><svg aria-hidden="true"><use href="#ico-sparkle"/></svg> READY WHEN YOU ARE</div><h2>Found something worth saving?</h2><p>Keep it close. Your next favorite video is just one link away.</p><a href="#downloader" class="closing-button">Download a video <svg aria-hidden="true"><use href="#ico-arrow"/></svg></a></div></div></section>
-  </main>
-
-  <footer class="site-footer"><div class="container"><div class="footer-main"><div><a class="brand footer-brand" href="/"><span class="brand-symbol"><svg aria-hidden="true"><use href="#ico-download"/></svg></span><span>reel<span class="brand-light">vault</span><span class="brand-period">.</span></span></a><p>Your little corner of the internet for saving the videos you love.</p></div><nav aria-label="Footer navigation"><a href="#downloader">Download</a><a href="#how-it-works">How it works</a><a href="#features">Features</a><a href="#faq">FAQs</a></nav></div><div class="footer-bottom"><span>© <span id="year">2026</span> ReelVault. Made for saving, not scrolling.</span><span>Independent tool. Not affiliated with Instagram or Meta. Respect creators' rights.</span></div></div></footer>
+      </section>
+      <section class="method container" id="how"><div class="section-top"><div><div class="section-kicker"><span class="mini-line"></span> THE PROCESS</div><h2>Three steps to a <em>clearer picture.</em></h2></div><p>Less guessing. More useful signals. Here's what happens when you check a clip.</p></div><div class="steps">
+        <article class="step"><div class="step-number">01 <span>↗</span></div><div class="step-art art-upload"><div class="fake-video"><div class="fake-play">▶</div><div class="fake-timeline"></div></div><div class="float-chip">+ &nbsp; video.mp4</div></div><h3>Share a video</h3><p>Paste a public TikTok, Instagram, or Facebook link — or upload a video from your device.</p></article>
+        <article class="step"><div class="step-number">02 <span>↗</span></div><div class="step-art art-analyze"><div class="scan-square"><div class="scan-circle"></div><div class="scan-line"></div></div><div class="scan-chip">◉ &nbsp; Inspecting frames</div></div><h3>We examine the evidence</h3><p>When configured, an AI model analyzes frames. We also inspect file details and available provenance.</p></article>
+        <article class="step"><div class="step-number">03 <span>↗</span></div><div class="step-art art-result"><div class="illustration-report"><small>ILLUSTRATIVE REPORT</small><div class="r-line long"></div><div class="r-line short"></div><div class="r-bars"><span></span><span></span><span></span><span></span><span></span></div></div></div><h3>Understand the result</h3><p>Get an explained assessment, including uncertainty, rather than an unsupported yes-or-no claim.</p></article>
+      </div></section>
+      <section class="approach container" id="about"><div class="approach-copy"><div class="section-kicker"><span class="mini-line"></span> WHY AI CHECKER</div><h2>Truth deserves<br>more than a <em>guess.</em></h2><p>AI-generated video can be incredibly convincing. But edited footage, camera effects, and platform compression can also confuse detectors. Our reports are designed to show what was measured, what wasn't, and where uncertainty remains.</p><div class="approach-points"><div><span>✓</span> Actual frame-based model signals when enabled</div><div><span>✓</span> Content Credentials checks when available</div><div><span>✓</span> Clear privacy and limitations, always</div></div></div><div class="approach-graphic"><div class="approach-lines"><span></span><span></span><span></span><span></span><span></span></div><div class="abstract-ring ring-a"></div><div class="abstract-ring ring-b"></div><div class="abstract-core">?</div><div class="floating-label top">VISUAL ANALYSIS</div><div class="floating-label bottom">EVIDENCE OVER CERTAINTY</div></div></section>
+      <section class="faq container" id="faq"><div class="section-kicker"><span class="mini-line"></span> GOOD TO KNOW</div><h2>Questions, <em>answered.</em></h2><div class="faq-list"><details><summary>Can AI Checker prove whether a video is AI-generated? <span>+</span></summary><p>No. Even advanced detection models can produce false positives and false negatives. Results are best treated as probabilistic indicators, not conclusive proof. This version distinguishes model results from metadata evidence.</p></details><details><summary>Does it work with TikTok, Instagram, and Facebook? <span>+</span></summary><p>Yes, by uploading videos saved from those platforms. Public URLs are supported on a best-effort basis when the platform allows retrieval, but some posts and accounts are inaccessible. Private posts and login bypassing are not supported.</p></details><details><summary>Are my videos kept on your servers? <span>+</span></summary><p>Uploaded videos are processed in temporary storage and deleted after analysis or failure. Completed report metadata is held in memory for about 20 minutes. When the optional AI provider is enabled, a shortened video sample is sent to the analysis provider.</p></details><details><summary>What if it says “inconclusive”? <span>+</span></summary><p>It means there is not enough reliable evidence to classify the clip. If visual AI detection is not configured, AI Checker will analyze file facts but will not invent a percentage or prediction.</p></details></div></section>
+      <section class="end-cta container"><div><span class="eyebrow">STAY CURIOUS</span><h2>Think twice.<br><em>Check once.</em></h2><p>A more thoughtful way to look at what goes viral.</p></div><a href="#checker">Check a video <span>↗</span></a></section>
+    <section class="download-tool-promo container" aria-label="Video downloader"><div><span class="mini-kicker">ANOTHER FREE TOOL</span><h2>Need to save an Instagram Reel?</h2><p>Download a public Instagram video you have permission to save with our companion tool—right here on AI Checker.</p></div><a href="/download/">Open Instagram Downloader ↗</a></section></main>
+    <footer class="footer container"><a href="/" class="brand"><span class="brand-symbol small-symbol"><span></span></span>AI Checker<span class="brand-dot">.</span></a><p>Check AI video signals and download authorized public Reels. Results are not proof of authenticity.</p><span>© <span id="year">2026</span> AI Checker</span></footer>
+  </div>
 </body>
 </html>

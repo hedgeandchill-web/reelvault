@@ -8,10 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg ca-certi
 WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY app.py worker_download.py ./
-# Your GitHub repository currently stores these assets at the root level.
-RUN mkdir -p ./static
-COPY index.html styles.css app.js favicon.svg robots.txt ./static/
+COPY app.py checker_backend.py worker_download.py ./
+RUN mkdir -p /app/static
+COPY index.html download.html checker.js checker.css checker-favicon.svg styles.css app.js favicon.svg robots.txt /app/static/
 RUN useradd -r -u 10001 appuser
 USER appuser
 EXPOSE 8000

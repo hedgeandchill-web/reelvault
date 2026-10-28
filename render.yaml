@@ -11,3 +11,9 @@ services:
         value: 1
       - key: QUEUE_CAPACITY
         value: 8
+      - key: ANALYSIS_WORKERS
+        value: 1
+      - key: ANALYSIS_QUEUE_LIMIT
+        value: 4
+      - key: MAX_MODEL_SCANS_PER_DAY
+        value: 20

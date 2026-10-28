@@ -1,0 +1,13 @@
+AI CHECKER — Update your existing ReelVault site
+
+1. Unzip this archive. Open the extracted folder.
+2. Open your existing repository https://github.com/hedgeandchill-web/reelvault
+3. Click Add file > Upload files.
+4. Drag ALL files inside this extracted folder to the GitHub upload window. They belong at the repository ROOT (not in a subfolder). GitHub will replace existing filenames such as app.py, Dockerfile, index.html, app.js and styles.css.
+5. Commit changes to main. Render should automatically redeploy its existing service; do not create a second Render service.
+6. The homepage / becomes AI Checker. The Instagram downloader remains at /download/.
+7. GET /api/checker/health displays model_enabled:false until Sightengine credentials are configured in Render Environment. Without them, checks correctly report Inconclusive.
+
+To activate paid AI detection: Render Dashboard > existing reelvault Web Service > Environment > set SIGHTENGINE_API_USER and SIGHTENGINE_API_SECRET, then redeploy. Never commit passwords or secrets to GitHub.
+
+In this GitHub flat package, Docker builds its own /app/static folder from the files at the repository root. Do not upload a static folder for this version. README and .env files are not required to go live.

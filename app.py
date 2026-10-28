@@ -31,6 +31,7 @@ from fastapi.staticfiles import StaticFiles
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from pydantic import BaseModel, Field
 from starlette.background import BackgroundTask
+import checker_backend
 
 BASE = Path(__file__).resolve().parent
 STATIC = BASE / 'static'
@@ -43,7 +44,7 @@ IG_PATH = re.compile(r'^/(?:reel|reels|p|tv)/([A-Za-z0-9_-]{5,40})/?$')
 SECRET = os.getenv('APP_SECRET') or secrets.token_urlsafe(48)
 signer = URLSafeTimedSerializer(SECRET, salt='reelvault-media')
 
-app = FastAPI(title='ReelVault', docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title='AI Checker — Video Authenticity & Downloader', docs_url=None, redoc_url=None, openapi_url=None)
 
 
 @dataclass
@@ -171,9 +172,11 @@ async def lifespan(_app: FastAPI):
     job_queue = asyncio.Queue(maxsize=QUEUE_CAPACITY)
     worker_tasks = [asyncio.create_task(download_worker()) for _ in range(PARALLEL_DOWNLOADS)]
     cleanup_task = asyncio.create_task(housekeeper())
+    await checker_backend.start_workers()
     try:
         yield
     finally:
+        await checker_backend.stop_workers()
         for task in [*worker_tasks, cleanup_task]:
             task.cancel()
         await asyncio.gather(*worker_tasks, cleanup_task, return_exceptions=True)
@@ -551,4 +554,9 @@ async def custom_http_error(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={'detail': exc.detail}, headers=exc.headers)
 
 
+@app.get('/download/', include_in_schema=False)
+async def download_page():
+    return FileResponse(STATIC / 'download.html', media_type='text/html')
+
+app.include_router(checker_backend.router)
 app.mount('/', StaticFiles(directory=STATIC, html=True), name='site')
